@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/REmatchReact/static/css/main.5f361e03.chunk.css",
+    "main.js": "/REmatchReact/static/js/main.8eba0407.chunk.js",
+    "main.js.map": "/REmatchReact/static/js/main.8eba0407.chunk.js.map",
+    "runtime-main.js": "/REmatchReact/static/js/runtime-main.65627891.js",
+    "runtime-main.js.map": "/REmatchReact/static/js/runtime-main.65627891.js.map",
+    "static/js/2.84d93077.chunk.js": "/REmatchReact/static/js/2.84d93077.chunk.js",
+    "static/js/2.84d93077.chunk.js.map": "/REmatchReact/static/js/2.84d93077.chunk.js.map",
+    "index.html": "/REmatchReact/index.html",
+    "precache-manifest.8a03e5542f4a31ad542057371cafef70.js": "/REmatchReact/precache-manifest.8a03e5542f4a31ad542057371cafef70.js",
+    "service-worker.js": "/REmatchReact/service-worker.js",
+    "static/css/main.5f361e03.chunk.css.map": "/REmatchReact/static/css/main.5f361e03.chunk.css.map",
+    "static/js/2.84d93077.chunk.js.LICENSE.txt": "/REmatchReact/static/js/2.84d93077.chunk.js.LICENSE.txt",
+    "static/media/logo.svg": "/REmatchReact/static/media/logo.5d5d9eef.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.65627891.js",
+    "static/js/2.84d93077.chunk.js",
+    "static/css/main.5f361e03.chunk.css",
+    "static/js/main.8eba0407.chunk.js"
+  ]
+}
