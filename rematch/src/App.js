@@ -1,26 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import Editor from './components/editor'
 
-function App() {
+const App = () => {
+  const [marks, setMarks] = React.useState([
+    {s: 0, e: 1}
+  ]);
+  const handleMarkUpdate = () => {
+    setMarks([
+      {s: 1, e: 3}
+    ]);
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1 onClick={() => console.log}>REmatch test!</h1>
+      <Editor label="textEditor" marks={marks} value="REmatch React is cool!"/>
+      <Editor label="textEditor2" marks={marks} value="REmatch React is better!"/>
+      <Editor label="textEditor2" marks={marks} value="REmatch React is easier!"/>
+      <button onClick={handleMarkUpdate}>Switch mark!</button>
     </div>
-  );
+  )
 }
 
 export default App;
