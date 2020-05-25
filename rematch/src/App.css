@@ -1,0 +1,29 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.marker {
+  background-color: red;
+}
+
+.CodeMirror {
+  font-size: 22px;
+}
+
+#queryEditor .CodeMirror {
+  height: 2.25rem;
+  margin-bottom: 1rem;
+}
+
+#queryEditor .CodeMirror pre::after, #queryEditor .CodeMirror pre::before {
+  content: ".*";
+  color: #888888;
+}
+/*# sourceMappingURL=App.css.map */

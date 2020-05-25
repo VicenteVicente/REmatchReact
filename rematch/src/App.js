@@ -1,22 +1,34 @@
-import React, { Component } from 'react';
-import Editor from './components/editor'
+import React from 'react';
+import {TextEditor, QueryEditor} from './components/editor'
 
 const App = () => {
-  const [marks, setMarks] = React.useState([
-    {s: 0, e: 1}
-  ]);
-  const handleMarkUpdate = () => {
+  const [marks, setMarks] = React.useState(null);
+  const markUpdate = () => {
     setMarks([
-      {s: 1, e: 3}
+      { s: 1, e: 9 }
     ]);
   }
   return (
     <div>
       <h1 onClick={() => console.log}>REmatch test!</h1>
-      <Editor label="textEditor" marks={marks} value="REmatch React is cool!"/>
-      <Editor label="textEditor2" marks={marks} value="REmatch React is better!"/>
-      <Editor label="textEditor2" marks={marks} value="REmatch React is easier!"/>
-      <button onClick={handleMarkUpdate}>Switch mark!</button>
+      <QueryEditor
+        label="queryEditor"
+        mode="rematchQuery"
+        value="!x{query}" 
+        theme="monokai"
+        lineNumbers={false}
+        disableNewLine={true}
+      />
+      <TextEditor 
+        label="textEditor"
+        mode="text/plain"
+        value="REmatch React is cool!" 
+        theme="monokai"
+        lineNumbers={true}
+        disableNewLine={false}
+        marks={marks}
+      />
+      <button onClick={markUpdate}>Switch mark!</button>
     </div>
   )
 }
