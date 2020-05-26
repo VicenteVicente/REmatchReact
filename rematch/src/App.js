@@ -3,35 +3,50 @@ import {TextEditor, QueryEditor} from './components/editor'
 
 
 const WORKPATH = `${process.env.PUBLIC_URL}/work.js`;
+let worker;
 
 const App = () => {
-  /* MARKS */
   const [marks, setMarks] = React.useState(null);
-  
+  const queryEditorRef = React.useRef();
+  const textEditorRef = React.useRef();
+
+  /* MARKS */
   const markUpdate = () => {
     setMarks([
       { s: 1, e: 9 }
     ]);
   }
-
-  /* WASM */
-  const queryEditorRef = React.useRef();
-  const textEditorRef = React.useRef();
+  /* WASM */  
+  const initWorker = () => {
+    worker = new Worker(WORKPATH);
+    worker.onmessage = (m) => {
+      if (m.data.type === "SCHEMA") {
+        console.log(m.data.schema)
+      } else
+      if (m.data.type === "RESULT") {
+        console.log(m.data.results);
+      } else 
+      if (m.data.type === "LASTRESULT") {
+        console.log(m.data.results);
+        console.log("FINISHED");
+        worker.terminate();
+        initWorker();
+      } else 
+      if (m.data.type === "ERROR") {
+        alert(m.data.error);
+      }
+    }
+  }
+  const runWorker = () => {
+    worker.postMessage({
+      text:   textEditorRef.current.editor.getValue(),
+      query:  queryEditorRef.current.editor.getValue(),
+    });
+  }
   // RUN THIS ONCE
   useEffect(() => {
-    const worker = new Worker(WORKPATH);
-    worker.onmessage = (m) => {
-      console.log(JSON.stringify(m.data, null, 2));
-    }
+    initWorker();
   }, []);
-  
-
-  const runWorker = () => {
-    console.log("%cWork started!", "color: red");
-    console.log(textEditorRef.current.editor.getValue(),
-    queryEditorRef.current.editor.getValue());
-    //worker.postMessage({text: TextEditor.editor.getValue(), query: `.*${QueryEditor.editor.getValue()}.*`});
-  }
 
   return (
     <div>
@@ -41,7 +56,7 @@ const App = () => {
         ref={queryEditorRef}
         label="queryEditor"
         mode="rematchQuery"
-        value="!x{query}" 
+        value="!x{.+}" 
         theme="monokai"
         lineNumbers={false}
         disableNewLine={true}
@@ -50,7 +65,7 @@ const App = () => {
         ref={textEditorRef}
         label="textEditor"
         mode="text/plain"
-        value="REmatch React is cool!" 
+        value="REmatch React is cool!REmatch React is cool!REmatch React is cool!" 
         theme="monokai"
         lineNumbers={true}
         disableNewLine={false}
