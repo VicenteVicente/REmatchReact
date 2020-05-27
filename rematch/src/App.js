@@ -11,6 +11,7 @@ const App = () => {
   const [spanList, setSpanList] = useState([]);
   const queryEditorRef = useRef();
   const textEditorRef = useRef();
+  let test = 1;
 
   /* MARKS */
   /*
@@ -109,7 +110,7 @@ REmatch is useful!`}
         disableNewLine={false}
         marks={marks}
       />
-      <DynamicResults test={setMarks} list={spanList}/>
+      <DynamicResults setMarks={setMarks} list={spanList}/>
     </div>
   )
 }

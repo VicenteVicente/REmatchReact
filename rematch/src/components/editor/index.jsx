@@ -11,6 +11,8 @@ const MARKCOLORS = [
     "m4",
 ];
 
+let prevMarks = [];
+
 /* MODE DEFINITION */
 CodeMirror.defineSimpleMode("rematchQuery", {
     start: [
@@ -54,13 +56,19 @@ class Editor extends Component {
 export class TextEditor extends Editor {
     componentDidUpdate(prevProps) {
         if (this.props.marks.length !== 0) {
+            if (prevMarks.length !== 0) {
+                prevMarks.forEach((m) => {
+                    m.clear();
+                });
+            }
             this.props.marks.forEach((m, idx) => {
-                this.editor.markText(
+                prevMarks.push(this.editor.markText(
                     this.editor.posFromIndex(m.s),
                     this.editor.posFromIndex(m.e),
                     { className: MARKCOLORS[idx]},
-                )
-            })
+                ))
+            });
+            this.editor.scrollIntoView(this.editor.posFromIndex(this.props.marks[0].s), 200);
         }
     }
 }

@@ -12,13 +12,23 @@ code {
     monospace;
 }
 
-.m0 { background-color: red; }
-.m1 { background-color: blue; }
-.m2 { background-color: green; }
-.m3 { background-color: orange; }
-.m4 { background-color: magenta; }
+
+$colors: 
+  red,
+  cyan,
+  green,
+  orange,
+  magenta;
 
 
+@for $i from 0 to 5 {
+  .m#{$i} {
+    background-color: nth($colors, $i+1);
+    border-radius: .125rem;
+    padding: .125rem 0;
+    transition: all .1s ease;
+  }
+}
 
 .CodeMirror {
   font-size: 22px;
@@ -32,4 +42,9 @@ code {
       color: #888888;
     }
   }
+}
+
+
+.resultLine {
+  width: 100%;
 }
