@@ -1,26 +1,30 @@
 import React, {Component} from 'react';
+import Pagination from '@material-ui/lab/Pagination';
 
-const PAGESIZE = 100;
+const PAGESIZE = 20;
+
+const PaginationControlled = (props) => {
+    const [page, setPage] = React.useState(1);
+    const handleChange = (event, value) => {
+      setPage(value);
+      //props.setMarks
+      props.handlePage(value);
+    };
+  
+    return (
+      <div>
+        <Pagination count={props.total} page={page} onChange={handleChange} />
+      </div>
+    );
+  }
 
 const Result = (props) => {
-    const spans = props.spans;
     const mapping = props.spans.map( (span, idx) => (
-        <span key={idx}>{span.m}</span>
+        <span key={idx} className={`r${idx}`}>{span.m}</span>
     ));
     return (
-        <button className="resultLine" onClick={() => props.setMarks(props.spans)}>{mapping}</button>
+        <div className="resultLine" onClick={() => props.setMarks(props.spans)}>{mapping}</div>
     )
-}
-
-const PageButtons = (props) => {
-    console.log("render buttons");
-    const buttons = [];
-    console.log(props.total);
-    for (let i=1; i<props.total+1; i++) {
-        console.log(i);
-        buttons.push(<button onClick={() => props.handlePage(i)}>{i}</button>);
-    }
-    return buttons;
 }
 
 class DynamicResults extends Component {
@@ -40,9 +44,11 @@ class DynamicResults extends Component {
             <Result key={idx} spans={spans} setMarks={this.props.setMarks}/>
         ))
         return (
-            <div style={{backgroundColor: 'gray'}}>
-                <PageButtons total={Math.ceil(this.props.list.length/PAGESIZE)} handlePage={this.handlePage.bind(this)}/>
-                {this.matches}
+            <div className="bottomContainer">
+                <PaginationControlled className="paginationContainer" total={Math.ceil(this.props.list.length/PAGESIZE)} handlePage={this.handlePage.bind(this)}/>
+                <div className="resultContainer">
+                    {this.matches}
+                </div>
             </div>
         )
     }

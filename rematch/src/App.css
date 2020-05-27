@@ -17,12 +17,48 @@ code {
   transition: all .1s ease;
 }
 
+.resultLine {
+  width: 100%;
+  padding: .25rem 0;
+}
+
+.resultLine:hover {
+  cursor: pointer !important;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.resultLine .r0 {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  width: 10rem;
+  color: red;
+}
+
 .m1 {
   background-color: cyan;
   border-radius: .125rem;
   padding: .125rem 0;
   -webkit-transition: all .1s ease;
   transition: all .1s ease;
+}
+
+.resultLine {
+  width: 100%;
+  padding: .25rem 0;
+}
+
+.resultLine:hover {
+  cursor: pointer !important;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.resultLine .r1 {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  width: 10rem;
+  color: cyan;
 }
 
 .m2 {
@@ -33,6 +69,24 @@ code {
   transition: all .1s ease;
 }
 
+.resultLine {
+  width: 100%;
+  padding: .25rem 0;
+}
+
+.resultLine:hover {
+  cursor: pointer !important;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.resultLine .r2 {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  width: 10rem;
+  color: green;
+}
+
 .m3 {
   background-color: orange;
   border-radius: .125rem;
@@ -41,12 +95,48 @@ code {
   transition: all .1s ease;
 }
 
+.resultLine {
+  width: 100%;
+  padding: .25rem 0;
+}
+
+.resultLine:hover {
+  cursor: pointer !important;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.resultLine .r3 {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  width: 10rem;
+  color: orange;
+}
+
 .m4 {
   background-color: magenta;
   border-radius: .125rem;
   padding: .125rem 0;
   -webkit-transition: all .1s ease;
   transition: all .1s ease;
+}
+
+.resultLine {
+  width: 100%;
+  padding: .25rem 0;
+}
+
+.resultLine:hover {
+  cursor: pointer !important;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.resultLine .r4 {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  width: 10rem;
+  color: magenta;
 }
 
 .CodeMirror {
@@ -63,7 +153,12 @@ code {
   color: #888888;
 }
 
-.resultLine {
-  width: 100%;
+.bottomContainer {
+  background-color: #272822;
+  height: 50vh;
+}
+
+.bottomContainer .resultContainer {
+  overflow: auto;
 }
 /*# sourceMappingURL=App.css.map */

@@ -11,16 +11,7 @@ const App = () => {
   const [spanList, setSpanList] = useState([]);
   const queryEditorRef = useRef();
   const textEditorRef = useRef();
-  let test = 1;
 
-  /* MARKS */
-  /*
-  const markUpdate = () => {
-    setMarks([
-      { s: 1, e: 9 }
-    ]);
-  }
-  */
   /* WASM */
   const addMatches = (results) => {
     results.forEach((result) => {
@@ -75,8 +66,7 @@ const App = () => {
 
   return (
     <div>
-      <button onClick={runWorker}>Run Query</button>
-      <h1 onClick={() => console.log}>REmatch test!</h1>
+      <button onClick={runWorker}>Run Query</button>      
       <QueryEditor
         ref={queryEditorRef}
         label="queryEditor"
