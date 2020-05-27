@@ -9,8 +9,24 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-.marker {
+.m0 {
   background-color: red;
+}
+
+.m1 {
+  background-color: blue;
+}
+
+.m2 {
+  background-color: green;
+}
+
+.m3 {
+  background-color: orange;
+}
+
+.m4 {
+  background-color: magenta;
 }
 
 .CodeMirror {

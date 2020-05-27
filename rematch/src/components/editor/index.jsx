@@ -2,6 +2,15 @@ import React, {Component} from 'react';
 import CodeMirror from 'codemirror';
 import 'codemirror/addon/mode/simple';
 
+
+const MARKCOLORS = [
+    "m0",
+    "m1",
+    "m2",
+    "m3", 
+    "m4",
+];
+
 /* MODE DEFINITION */
 CodeMirror.defineSimpleMode("rematchQuery", {
     start: [
@@ -19,6 +28,7 @@ class Editor extends Component {
             mode: this.props.mode,
             theme: this.props.theme,
             lineNumbers: this.props.lineNumbers,
+            scrollbarStyle: this.props.scrollbarStyle,
             smartIndent: false,
             indentWithTabs: true,
             showInvisibles: false,
@@ -43,16 +53,15 @@ class Editor extends Component {
 /* TEXT EDITOR */
 export class TextEditor extends Editor {
     componentDidUpdate(prevProps) {
-        let markTest = this.props.marks[0];
-        let markStart = this.editor.posFromIndex(markTest.s);
-        let markEnd = this.editor.posFromIndex(markTest.e);
-        this.editor.markText(
-            markStart,
-            markEnd,
-            {
-                className: 'marker',
-            },
-        )
+        if (this.props.marks.length !== 0) {
+            this.props.marks.forEach((m, idx) => {
+                this.editor.markText(
+                    this.editor.posFromIndex(m.s),
+                    this.editor.posFromIndex(m.e),
+                    { className: MARKCOLORS[idx]},
+                )
+            })
+        }
     }
 }
 

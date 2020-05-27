@@ -1,43 +1,67 @@
-import React, {useEffect} from 'react';
-import {TextEditor, QueryEditor} from './components/editor'
+import React, {useEffect, useState, useRef} from 'react';
+import {TextEditor, QueryEditor} from './components/Editor';
+import DynamicResults from './components/DynamicResults';
 
 
 const WORKPATH = `${process.env.PUBLIC_URL}/work.js`;
 let worker;
 
 const App = () => {
-  const [marks, setMarks] = React.useState(null);
-  const queryEditorRef = React.useRef();
-  const textEditorRef = React.useRef();
+  const [marks, setMarks] = useState([]);
+  const [spanList, setSpanList] = useState([]);
+  const queryEditorRef = useRef();
+  const textEditorRef = useRef();
 
   /* MARKS */
+  /*
   const markUpdate = () => {
     setMarks([
       { s: 1, e: 9 }
     ]);
   }
-  /* WASM */  
+  */
+  /* WASM */
+  const addMatches = (results) => {
+    results.forEach((result) => {
+      result.forEach((span) => {
+        span.m = textEditorRef.current.editor.getRange(
+          textEditorRef.current.editor.posFromIndex(span.s),
+          textEditorRef.current.editor.posFromIndex(span.e)
+        );
+      })
+    })
+  }
   const initWorker = () => {
     worker = new Worker(WORKPATH);
     worker.onmessage = (m) => {
       if (m.data.type === "SCHEMA") {
-        console.log(m.data.schema)
       } else
       if (m.data.type === "RESULT") {
-        console.log(m.data.results);
+        addMatches(m.data.spans);
+        setSpanList((currResults) => [...currResults, ...m.data.spans]);
       } else 
       if (m.data.type === "LASTRESULT") {
-        console.log(m.data.results);
+        addMatches(m.data.spans);
+        setSpanList((currResults) => [...currResults, ...m.data.spans]);
+
         console.log("FINISHED");
         worker.terminate();
         initWorker();
       } else 
       if (m.data.type === "ERROR") {
         alert(m.data.error);
+        worker.terminate();
+        initWorker();
+      } else 
+      if (m.data.type === "NORESULTS") {
+        console.log("No matches found.");
+        worker.terminate();
+        initWorker();
       }
     }
   }
   const runWorker = () => {
+    setSpanList([]);
     worker.postMessage({
       text:   textEditorRef.current.editor.getValue(),
       query:  queryEditorRef.current.editor.getValue(),
@@ -56,7 +80,8 @@ const App = () => {
         ref={queryEditorRef}
         label="queryEditor"
         mode="rematchQuery"
-        value="!x{.+}" 
+        scrollbarStyle="null"
+        value="!a{RE}!b{match} !c{is} !d{[a-z]+}!e{!}" 
         theme="monokai"
         lineNumbers={false}
         disableNewLine={true}
@@ -65,12 +90,26 @@ const App = () => {
         ref={textEditorRef}
         label="textEditor"
         mode="text/plain"
-        value="REmatch React is cool!REmatch React is cool!REmatch React is cool!" 
+        scrollbarStyle="native"
+        value={
+`REmatch is cool!
+REmatch is awesome!
+REmatch is pretty!
+REmatch is useful!
+REmatch is cool!
+REmatch is awesome!
+REmatch is pretty!
+REmatch is useful!
+REmatch is cool!
+REmatch is awesome!
+REmatch is pretty!
+REmatch is useful!`}
         theme="monokai"
         lineNumbers={true}
         disableNewLine={false}
         marks={marks}
       />
+      <DynamicResults test={setMarks} list={spanList}/>
     </div>
   )
 }

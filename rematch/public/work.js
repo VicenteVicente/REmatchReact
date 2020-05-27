@@ -6,7 +6,7 @@ let currSpan;
 let schema = [];
 let arr = [];
 let tempArr = [];
-const MESSAGESIZE = 1000;
+const MESSAGESIZE = 10000;
 let counter = 0;
 
 Module['onRuntimeInitialized'] = () => {
@@ -24,16 +24,13 @@ Module['onRuntimeInitialized'] = () => {
                 schema: schema,
             });
             /* RESULTS */
+            if (!instance.hasNext()) {
+                postMessage({
+                    type: "NORESULTS",
+                });
+            }
             while (instance.hasNext()) {
                 currResult = instance.next();
-                if (counter == MESSAGESIZE || !instance.hasNext()) {
-                    postMessage({
-                        type: (instance.hasNext()) ? "RESULT" : "LASTRESULT",
-                        results: arr,
-                    });
-                    arr = [];
-                    counter = 0;
-                }
                 tempArr = [];
                 for (i = 0; i < schema.length; i++) {
                     currSpan = currResult.get(i);
@@ -41,6 +38,14 @@ Module['onRuntimeInitialized'] = () => {
                 }
                 arr.push(tempArr);
                 counter++;
+                if (counter == MESSAGESIZE || !instance.hasNext()) {
+                    postMessage({
+                        type: (instance.hasNext()) ? "RESULT" : "LASTRESULT",
+                        spans: arr,
+                    });
+                    arr = [];
+                    counter = 0;
+                }
             }
             // instance.delete();
         } catch(err) {
