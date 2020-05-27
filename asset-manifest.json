@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/REmatchReact/static/css/main.43d0577d.chunk.css",
-    "main.js": "/REmatchReact/static/js/main.37aeaea9.chunk.js",
-    "main.js.map": "/REmatchReact/static/js/main.37aeaea9.chunk.js.map",
+    "main.css": "/REmatchReact/static/css/main.4c5578d7.chunk.css",
+    "main.js": "/REmatchReact/static/js/main.76cb7c50.chunk.js",
+    "main.js.map": "/REmatchReact/static/js/main.76cb7c50.chunk.js.map",
     "runtime-main.js": "/REmatchReact/static/js/runtime-main.65627891.js",
     "runtime-main.js.map": "/REmatchReact/static/js/runtime-main.65627891.js.map",
     "static/css/2.22e416e1.chunk.css": "/REmatchReact/static/css/2.22e416e1.chunk.css",
     "static/js/2.e968ec01.chunk.js": "/REmatchReact/static/js/2.e968ec01.chunk.js",
     "static/js/2.e968ec01.chunk.js.map": "/REmatchReact/static/js/2.e968ec01.chunk.js.map",
     "index.html": "/REmatchReact/index.html",
-    "precache-manifest.59142e4a447563e294b52f5fde8ba02b.js": "/REmatchReact/precache-manifest.59142e4a447563e294b52f5fde8ba02b.js",
+    "precache-manifest.ac3fa0b925a9c6ff5b8b222767f4996b.js": "/REmatchReact/precache-manifest.ac3fa0b925a9c6ff5b8b222767f4996b.js",
     "service-worker.js": "/REmatchReact/service-worker.js",
     "static/css/2.22e416e1.chunk.css.map": "/REmatchReact/static/css/2.22e416e1.chunk.css.map",
-    "static/css/main.43d0577d.chunk.css.map": "/REmatchReact/static/css/main.43d0577d.chunk.css.map",
+    "static/css/main.4c5578d7.chunk.css.map": "/REmatchReact/static/css/main.4c5578d7.chunk.css.map",
     "static/js/2.e968ec01.chunk.js.LICENSE.txt": "/REmatchReact/static/js/2.e968ec01.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.65627891.js",
     "static/css/2.22e416e1.chunk.css",
     "static/js/2.e968ec01.chunk.js",
-    "static/css/main.43d0577d.chunk.css",
-    "static/js/main.37aeaea9.chunk.js"
+    "static/css/main.4c5578d7.chunk.css",
+    "static/js/main.76cb7c50.chunk.js"
   ]
 }

@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8ba524a78ae49cc7597de11d9145c1a7",
+    "revision": "b577d1236ed0e688aebe9c54e6fbfece",
     "url": "/REmatchReact/index.html"
   },
   {
@@ -8,8 +8,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/REmatchReact/static/css/2.22e416e1.chunk.css"
   },
   {
-    "revision": "84261877903a0c090585",
-    "url": "/REmatchReact/static/css/main.43d0577d.chunk.css"
+    "revision": "5b824bb05ed14c8ea656",
+    "url": "/REmatchReact/static/css/main.4c5578d7.chunk.css"
   },
   {
     "revision": "797abd55174ca196e7ee",
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/REmatchReact/static/js/2.e968ec01.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "84261877903a0c090585",
-    "url": "/REmatchReact/static/js/main.37aeaea9.chunk.js"
+    "revision": "5b824bb05ed14c8ea656",
+    "url": "/REmatchReact/static/js/main.76cb7c50.chunk.js"
   },
   {
     "revision": "42c5a97992f931e89410",
