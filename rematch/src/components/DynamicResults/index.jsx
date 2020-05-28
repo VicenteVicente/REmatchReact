@@ -10,7 +10,7 @@ const PaginationControlled = (props) => {
       //props.setMarks
       props.handlePage(value);
     };
-  
+    
     return (
       <div>
         <Pagination count={props.total} page={page} onChange={handleChange} />

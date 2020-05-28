@@ -1,9 +1,12 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {TextEditor, QueryEditor} from './components/Editor';
 import DynamicResults from './components/DynamicResults';
+import {Button} from '@material-ui/core';
+import {PlayArrow} from '@material-ui/icons';
 
 
 const WORKPATH = `${process.env.PUBLIC_URL}/work.js`;
+const CHUNKSIZE = 1*10**8; // 100MB
 let worker;
 
 const App = () => {
@@ -59,6 +62,23 @@ const App = () => {
       query:  queryEditorRef.current.editor.getValue(),
     });
   }
+  /* FILE UPLOAD */
+  const handleFile = async (file) => {
+    if (!file) {return};
+    textEditorRef.current.editor.setValue("");
+    let start = 0;
+    let end = CHUNKSIZE;
+    while (start < file.size) {
+        await file.slice(start, end).text()
+          // eslint-disable-next-line no-loop-func
+          .then((textChunk) => {
+            textEditorRef.current.editor.replaceRange(textChunk, { line: Infinity });
+            start = end;
+            end += CHUNKSIZE;
+          });
+    }
+    console.log("upload done");
+  }
   // RUN THIS ONCE
   useEffect(() => {
     initWorker();
@@ -66,14 +86,39 @@ const App = () => {
 
   return (
     <div>
-      <button onClick={runWorker}>Run Query</button>      
+      <Button 
+        onClick={runWorker} 
+        color="secondary" 
+        variant="outlined"
+        startIcon={<PlayArrow/>}
+        >
+          Run Query
+      </Button>
+      <input
+        accept="*"
+        id="contained-button-file"
+        multiple
+        type="file"
+        style={{display: 'none'}}
+        onChange={(f) => handleFile(f.target.files[0])}
+      />
+      <label htmlFor="contained-button-file">
+        <Button 
+          color="primary" 
+          variant="outlined" 
+          component="span"
+        >
+          Upload
+        </Button>
+      </label>
+      
       <QueryEditor
         ref={queryEditorRef}
         label="queryEditor"
         mode="rematchQuery"
         scrollbarStyle="null"
         value="!a{RE}!b{match} !c{is} !d{[a-z]+}!e{!}" 
-        theme="monokai"
+        theme="default"
         lineNumbers={false}
         disableNewLine={true}
       />
@@ -95,7 +140,7 @@ REmatch is cool!
 REmatch is awesome!
 REmatch is pretty!
 REmatch is useful!`}
-        theme="monokai"
+        theme="defalult"
         lineNumbers={true}
         disableNewLine={false}
         marks={marks}
