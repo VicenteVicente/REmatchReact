@@ -6,15 +6,12 @@ const PAGESIZE = 20;
 const PaginationControlled = (props) => {
     const [page, setPage] = React.useState(1);
     const handleChange = (event, value) => {
-      setPage(value);
-      //props.setMarks
-      props.handlePage(value);
+        setPage(value);
+        props.handlePage(value);
     };
     
     return (
-      <div>
         <Pagination count={props.total} page={page} onChange={handleChange} />
-      </div>
     );
   }
 
@@ -37,7 +34,22 @@ class DynamicResults extends Component {
     handlePage(n) {
         this.setState({currPage: n});
     }
+
+    addText(results) {
+        results.forEach((result) => {
+            result.forEach((span) => {
+            span.m = this.props.textEditorRef.current.editor.getRange(
+                this.props.textEditorRef.current.editor.posFromIndex(span.s),
+                this.props.textEditorRef.current.editor.posFromIndex(span.e));
+            })
+        })
+    }
+
     render() {
+        this.matches = this.props.list.slice(
+            (this.state.currPage - 1)*PAGESIZE,
+            (this.state.currPage)*PAGESIZE);
+        this.addText(this.matches);
         this.matches = this.props.list.slice(
             (this.state.currPage - 1)*PAGESIZE,
             (this.state.currPage)*PAGESIZE).map( (spans, idx) => (

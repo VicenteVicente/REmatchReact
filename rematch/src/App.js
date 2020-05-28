@@ -2,7 +2,7 @@ import React, {useEffect, useState, useRef} from 'react';
 import {TextEditor, QueryEditor} from './components/Editor';
 import DynamicResults from './components/DynamicResults';
 import {Button} from '@material-ui/core';
-import {PlayArrow} from '@material-ui/icons';
+import {PlayArrow, Publish} from '@material-ui/icons';
 
 
 const WORKPATH = `${process.env.PUBLIC_URL}/work.js`;
@@ -16,27 +16,17 @@ const App = () => {
   const textEditorRef = useRef();
 
   /* WASM */
-  const addMatches = (results) => {
-    results.forEach((result) => {
-      result.forEach((span) => {
-        span.m = textEditorRef.current.editor.getRange(
-          textEditorRef.current.editor.posFromIndex(span.s),
-          textEditorRef.current.editor.posFromIndex(span.e)
-        );
-      })
-    })
-  }
   const initWorker = () => {
     worker = new Worker(WORKPATH);
     worker.onmessage = (m) => {
       if (m.data.type === "SCHEMA") {
       } else
       if (m.data.type === "RESULT") {
-        addMatches(m.data.spans);
+        //addMatches(m.data.spans);
         setSpanList((currResults) => [...currResults, ...m.data.spans]);
       } else 
       if (m.data.type === "LASTRESULT") {
-        addMatches(m.data.spans);
+        //addMatches(m.data.spans);
         setSpanList((currResults) => [...currResults, ...m.data.spans]);
 
         console.log("FINISHED");
@@ -50,6 +40,7 @@ const App = () => {
       } else 
       if (m.data.type === "NORESULTS") {
         console.log("No matches found.");
+        alert("No matches found.");
         worker.terminate();
         initWorker();
       }
@@ -107,8 +98,9 @@ const App = () => {
           color="primary" 
           variant="outlined" 
           component="span"
+          startIcon={<Publish/>}
         >
-          Upload
+          Upload file
         </Button>
       </label>
       
@@ -145,7 +137,7 @@ REmatch is useful!`}
         disableNewLine={false}
         marks={marks}
       />
-      <DynamicResults setMarks={setMarks} list={spanList}/>
+      <DynamicResults setMarks={setMarks} list={spanList} textEditorRef={textEditorRef}/>
     </div>
   )
 }
