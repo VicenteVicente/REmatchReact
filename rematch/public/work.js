@@ -1,4 +1,3 @@
-console.log("%cWorker: INITIALIZED", "background-color: blue;");
 importScripts('./spanners_interface.js');
 let i;
 let currResult;
@@ -20,13 +19,13 @@ Module['onRuntimeInitialized'] = () => {
                 schema.push(tempSchema.get(i));
             }
             postMessage({
-                type: "SCHEMA",
+                type: 'SCHEMA',
                 schema: schema,
             });
             /* RESULTS */
             if (!instance.hasNext()) {
                 postMessage({
-                    type: "NORESULTS",
+                    type: 'NO_MATCHES',
                 });
             }
             while (instance.hasNext()) {
@@ -38,9 +37,9 @@ Module['onRuntimeInitialized'] = () => {
                 }
                 arr.push(tempArr);
                 counter++;
-                if (counter == MESSAGESIZE || !instance.hasNext()) {
+                if (counter === MESSAGESIZE || !instance.hasNext()) {
                     postMessage({
-                        type: (instance.hasNext()) ? "RESULT" : "LASTRESULT",
+                        type: (instance.hasNext()) ? 'SPANS' : 'LAST_SPANS',
                         spans: arr,
                     });
                     arr = [];
@@ -50,7 +49,7 @@ Module['onRuntimeInitialized'] = () => {
             // instance.delete();
         } catch(err) {
             postMessage({
-                type: "ERROR",
+                type: 'ERROR',
                 error: `${err} Reloading worker...`,
             });
         }
