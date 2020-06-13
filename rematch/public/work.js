@@ -2,14 +2,14 @@ importScripts('./spanners_interface.js');
 let i;
 let currResult;
 let currSpan;
-let schema = [];
-let arr = [];
-let tempArr = [];
 const MESSAGESIZE = 10000;
-let counter = 0;
 
 Module['onRuntimeInitialized'] = () => {
     onmessage = (m) => {
+        let schema = [];
+        let arr = [];
+        let tempArr = [];
+        let counter = 0;
         try {
             let instance = new Module.WasmInterface(m.data.text, `.*${m.data.query}.*`);
             instance.init();
