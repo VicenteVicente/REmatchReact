@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/REmatchReact/static/css/main.e6b91068.chunk.css",
-    "main.js": "/REmatchReact/static/js/main.a2cd42e6.chunk.js",
-    "main.js.map": "/REmatchReact/static/js/main.a2cd42e6.chunk.js.map",
+    "main.css": "/REmatchReact/static/css/main.9ca2d475.chunk.css",
+    "main.js": "/REmatchReact/static/js/main.0ee1aa95.chunk.js",
+    "main.js.map": "/REmatchReact/static/js/main.0ee1aa95.chunk.js.map",
     "runtime-main.js": "/REmatchReact/static/js/runtime-main.65627891.js",
     "runtime-main.js.map": "/REmatchReact/static/js/runtime-main.65627891.js.map",
-    "static/css/2.22e416e1.chunk.css": "/REmatchReact/static/css/2.22e416e1.chunk.css",
-    "static/js/2.b5f8d43c.chunk.js": "/REmatchReact/static/js/2.b5f8d43c.chunk.js",
-    "static/js/2.b5f8d43c.chunk.js.map": "/REmatchReact/static/js/2.b5f8d43c.chunk.js.map",
+    "static/css/2.1ea61d68.chunk.css": "/REmatchReact/static/css/2.1ea61d68.chunk.css",
+    "static/js/2.319c633b.chunk.js": "/REmatchReact/static/js/2.319c633b.chunk.js",
+    "static/js/2.319c633b.chunk.js.map": "/REmatchReact/static/js/2.319c633b.chunk.js.map",
     "index.html": "/REmatchReact/index.html",
-    "precache-manifest.ec55811638207c223e4bd93b077ce2f0.js": "/REmatchReact/precache-manifest.ec55811638207c223e4bd93b077ce2f0.js",
+    "precache-manifest.a158c62925527170b1b1de18e04252bb.js": "/REmatchReact/precache-manifest.a158c62925527170b1b1de18e04252bb.js",
     "service-worker.js": "/REmatchReact/service-worker.js",
-    "static/css/2.22e416e1.chunk.css.map": "/REmatchReact/static/css/2.22e416e1.chunk.css.map",
-    "static/css/main.e6b91068.chunk.css.map": "/REmatchReact/static/css/main.e6b91068.chunk.css.map",
-    "static/js/2.b5f8d43c.chunk.js.LICENSE.txt": "/REmatchReact/static/js/2.b5f8d43c.chunk.js.LICENSE.txt"
+    "static/css/2.1ea61d68.chunk.css.map": "/REmatchReact/static/css/2.1ea61d68.chunk.css.map",
+    "static/css/main.9ca2d475.chunk.css.map": "/REmatchReact/static/css/main.9ca2d475.chunk.css.map",
+    "static/js/2.319c633b.chunk.js.LICENSE.txt": "/REmatchReact/static/js/2.319c633b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.65627891.js",
-    "static/css/2.22e416e1.chunk.css",
-    "static/js/2.b5f8d43c.chunk.js",
-    "static/css/main.e6b91068.chunk.css",
-    "static/js/main.a2cd42e6.chunk.js"
+    "static/css/2.1ea61d68.chunk.css",
+    "static/js/2.319c633b.chunk.js",
+    "static/css/main.9ca2d475.chunk.css",
+    "static/js/main.0ee1aa95.chunk.js"
   ]
 }
