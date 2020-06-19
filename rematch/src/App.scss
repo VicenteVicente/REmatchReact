@@ -14,11 +14,11 @@ code {
 
 
 $colors: 
-#ff4a4a,
-#8e82ff,
-hsl(143, 100%, 64%),
-#f2a51a,
-#9c9c9c;
+#03DAC6,
+#FCE938,
+hsl(354, 62%, 58%),
+hsl(234, 96%, 67%),
+#20BA56;
 
 
 @for $i from 0 to 5 {
@@ -28,8 +28,9 @@ hsl(143, 100%, 64%),
     padding: .25rem;
   }
   .th#{$i} {
-    background-color: rgba(nth($colors, $i+1), .75) !important;
-    color: white !important;
+    background-color: nth($colors, $i+1) !important;
+    color: black !important;
+    font-weight: bolder !important;
   }
   .cm-m#{$i} {
     color: nth($colors, $i+1) !important;
@@ -47,15 +48,17 @@ hsl(143, 100%, 64%),
     }
   }
   #textEditor & {
-    height: 40vh;
+    height: 30vh;
   }
 }
 
 #textEditor {
-  height: 40vh;
+  height: 30vh;
+  position: relative;
 }
 
 #queryEditor {
+  
 }
 
 .sectionTitle {
@@ -75,4 +78,17 @@ hsl(143, 100%, 64%),
   display: block;
   margin: 1rem auto;
   height: 3rem;
+}
+
+.uploadButton {
+  border-radius: 50% !important;
+  padding: 1rem !important;
+  width: 3rem !important;
+  height: 3rem !important;
+  min-width: unset !important;
+  min-height: unset !important;
+  position: absolute !important;
+  z-index: 10000;
+  bottom: 2rem;
+  right: 2rem;
 }

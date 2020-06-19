@@ -1,3 +1,11 @@
+/**
+ * TODO:
+ * pagination
+ * fixed editor and resizable layout
+ * color scheme
+ * hover
+ * background color differed
+ */
 import Logo from './assets/logo-dark.png';
 
 import CodeMirror from 'codemirror';
@@ -8,7 +16,7 @@ import React, { Component } from 'react';
 
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { Button } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import { PlayArrow, Publish } from '@material-ui/icons';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -16,12 +24,16 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TablePagination from '@material-ui/core/TablePagination';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Backdrop from '@material-ui/core/Backdrop';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
+import Tooltip from '@material-ui/core/Tooltip';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Pagination from '@material-ui/lab/Pagination';
 
 const WORKPATH = `${process.env.PUBLIC_URL}/work.js`;
 const CHUNKSIZE = 1*10**8; // 100MB
@@ -58,13 +70,13 @@ const darkTheme = createMuiTheme({
       },
       background: {
         paper: '#212121',
-        default: '#212121',
+        default: '#2c2c2c',
       }
     },
 });
 
-const SectionTitle = ({name}) => (
-  <div className="sectionTitle" style={{backgroundColor: '#03DAC6'}}>{name}</div>
+const SectionTitle = ({title}) => (
+  <div className="sectionTitle" style={{backgroundColor: '#03DAC6'}}>{title}</div>
 )
 
 class ResultsTable extends Component {
@@ -77,7 +89,8 @@ class ResultsTable extends Component {
   }
 
   handleChangePage = (_, newPage) => {
-    this.setState({page: newPage});
+    console.log(newPage);
+    this.setState({page: newPage-1});
   }
 
   handleChangeRowsPerPage = (event) => {
@@ -92,33 +105,43 @@ class ResultsTable extends Component {
     this.props.addMarks(row);
   }
 
-  componentWillReceiveProps(_) {
+  UNSAFE_componentWillReceiveProps(_) {
     this.setState({page: 0});
   }
 
   render() {
     const {schema, spanList, textEditor} = this.props;
-    return (
-      <TableContainer>
-        <Table stickyHeader size="small" style={{ tableLayout: 'auto' }}>
+    return ([
+      <Grid container spacing={0}>
+        <Grid item xs={10} style={{display: 'flex', alignItems: 'center', margin: '.25rem 0'}}>
+          <Pagination
+            style={{display: 'block'}}
+            count={Math.ceil(spanList.length/this.state.rowsPerPage)} 
+            onChange={this.handleChangePage}
+            showFirstButton 
+            showLastButton/>
+        </Grid>
+        <Grid item xs={2} style={{display: 'flex', alignItems: 'center'}}>
+            <Select
+                style={{width: '100%'}}
+                value={this.state.rowsPerPage}
+                labelId="demo-simple-select-label"
+                onChange={this.handleChangeRowsPerPage}>
+                <MenuItem value={10}>10 rows per page</MenuItem>
+                <MenuItem value={25}>25 rows per page</MenuItem>
+                <MenuItem value={50}>50 rows per page</MenuItem>
+                <MenuItem value={100}>100 rows per page</MenuItem>
+            </Select>
+        </Grid>
+      </Grid>,
+      <TableContainer style={{height: '40vh', oveflow: 'auto'}}>
+        <Table stickyHeader size="small">
           <colgroup>
             {schema.map((_, schIdx) => (
               <col key={schIdx} style={{width: `${100*1/schema.length}%`}}/>
             ))}          
           </colgroup>
           <TableHead>
-            <TableRow>
-              <TablePagination
-                labelRowsPerPage="Matches per page:"
-                rowsPerPageOptions={[10, 25, 50, 100]}
-                colSpan={schema.length}
-                count={spanList.length}
-                rowsPerPage={this.state.rowsPerPage}
-                page={this.state.page}
-                onChangePage={this.handleChangePage}
-                onChangeRowsPerPage={this.handleChangeRowsPerPage}
-              />
-            </TableRow>
             {(spanList.length>0)
             ? <TableRow>
                 {schema.map((name, idxHead) => (
@@ -129,7 +152,7 @@ class ResultsTable extends Component {
               </TableRow>
             : <TableRow>
                 <TableCell>
-                  No matches.
+                  No matches
                 </TableCell>
               </TableRow>
             }
@@ -153,7 +176,7 @@ class ResultsTable extends Component {
               ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer>]
     )
   }
 }
@@ -226,6 +249,7 @@ REmatch best!
         }
       );
     });
+    this.state.textEditor.scrollIntoView(start, 200);
   }
   clearMarks = () => {
     this.state.textEditor.getAllMarks().forEach((mark) => {
@@ -290,57 +314,58 @@ REmatch best!
     return (
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <Container>
-          <img className="logo" src={Logo} alt="REmatch"/>
-          <Paper elevation={3}>
-            <Backdrop open={this.state.uploadingFile} style={{zIndex: 10000, display: 'flex', flexDirection: 'column'}}>
-              <CircularProgress size='3rem'/>
-              <h2 style={{color: '#fff'}}>Loading ({this.state.fileProgress}%)</h2>
-            </Backdrop>
-            <Grid container spacing={0}>
-              <Grid item xs={12}>
-                <input accept="*" id="fileInput" type="file" style={{display: 'none'}} onChange={this.handleFile}/>
-                <label htmlFor="fileInput">
-                  <Button variant="outlined" component="span" startIcon={<Publish/>}>
-                    Upload file
+          <Container className="container">
+           <img className="logo" src={Logo} alt="REmatch"/>
+            <Paper elevation={3}>
+              <Backdrop open={this.state.uploadingFile} style={{zIndex: 10000, display: 'flex', flexDirection: 'column'}}>
+                <CircularProgress size='3rem'/>
+                <h2 style={{color: '#fff'}}>Loading ({this.state.fileProgress}%)</h2>
+              </Backdrop>
+              <Grid container spacing={0}>
+                {/* Expression */}
+                <Grid item xs={12}>
+                  <SectionTitle title="Expression"/>
+                </Grid>
+                <Grid item xs={11}>
+                  <div id="queryEditor"></div>
+                </Grid>
+                <Grid item xs={1}>
+                  <Button color="primary" startIcon={<PlayArrow/>} onClick={this.runWorker} style={{width: '100%', background: 'none !important'}}>
+                      Run
                   </Button>
-                </label>
+                </Grid>
+                {/* EDITOR */}
+                <Grid item xs={12}>
+                  <SectionTitle title="Text"/>
+                </Grid>
+                <Grid item xs={12}>
+                  <div id="textEditor">
+                    <input accept="*" id="fileInput" type="file" style={{display: 'none'}} onChange={this.handleFile}/>
+                    <label htmlFor="fileInput">
+                      <Tooltip title="Upload a file">
+                        <Button size="medium" variant="contained" component="span" color="primary" className="uploadButton">
+                          <Publish/>
+                        </Button>
+                      </Tooltip>
+                    </label>
+                  </div>
+                </Grid>
+                {/* RESULTS */}
+                <Grid item xs={12}>
+                  <SectionTitle title="Matches"/>
+                </Grid>
+                <Grid item xs={12}>
+                  <ResultsTable 
+                    spanList={this.state.spanList} 
+                    schema={this.state.schema} 
+                    textEditor={this.state.textEditor} 
+                    addMarks={this.addMarks}
+                    clearMarks={this.clearMarks}
+                  />
+                </Grid>
               </Grid>
-              {/* Expression */}
-              <Grid item xs={12}>
-                <SectionTitle name="Expression"/>
-              </Grid>
-              <Grid item xs={11}>
-                <div id="queryEditor"></div>
-              </Grid>
-              <Grid item xs={1}>
-                <Button color="primary" startIcon={<PlayArrow/>} onClick={this.runWorker} style={{width: '100%', background: 'none !important'}}>
-                    Run
-                </Button>
-              </Grid>
-              {/* EDITOR */}
-              <Grid item xs={12}>
-                <SectionTitle name="Text"/>
-              </Grid>
-              <Grid item xs={12}>
-                <div id="textEditor"></div>
-              </Grid>
-              {/* RESULTS */}
-              <Grid item xs={12}>
-                <SectionTitle name="Matches"/>
-              </Grid>
-              <Grid item xs={12}>
-                <ResultsTable 
-                  spanList={this.state.spanList} 
-                  schema={this.state.schema} 
-                  textEditor={this.state.textEditor} 
-                  addMarks={this.addMarks}
-                  clearMarks={this.clearMarks}
-                />
-              </Grid>
-            </Grid>
-          </Paper>
-        </Container>
+            </Paper>
+          </Container>
       </ThemeProvider>
     )
   }

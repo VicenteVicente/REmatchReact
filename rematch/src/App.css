@@ -10,78 +10,83 @@ code {
 }
 
 .m0 {
-  background-color: #ff4a4a !important;
+  background-color: #03DAC6 !important;
   color: black !important;
   padding: .25rem;
 }
 
 .th0 {
-  background-color: rgba(255, 74, 74, 0.75) !important;
-  color: white !important;
+  background-color: #03DAC6 !important;
+  color: black !important;
+  font-weight: bolder !important;
 }
 
 .cm-m0 {
-  color: #ff4a4a !important;
+  color: #03DAC6 !important;
 }
 
 .m1 {
-  background-color: #8e82ff !important;
+  background-color: #FCE938 !important;
   color: black !important;
   padding: .25rem;
 }
 
 .th1 {
-  background-color: rgba(142, 130, 255, 0.75) !important;
-  color: white !important;
+  background-color: #FCE938 !important;
+  color: black !important;
+  font-weight: bolder !important;
 }
 
 .cm-m1 {
-  color: #8e82ff !important;
+  color: #FCE938 !important;
 }
 
 .m2 {
-  background-color: #47ff8e !important;
+  background-color: #d6515f !important;
   color: black !important;
   padding: .25rem;
 }
 
 .th2 {
-  background-color: rgba(71, 255, 142, 0.75) !important;
-  color: white !important;
+  background-color: #d6515f !important;
+  color: black !important;
+  font-weight: bolder !important;
 }
 
 .cm-m2 {
-  color: #47ff8e !important;
+  color: #d6515f !important;
 }
 
 .m3 {
-  background-color: #f2a51a !important;
+  background-color: #5a6afc !important;
   color: black !important;
   padding: .25rem;
 }
 
 .th3 {
-  background-color: rgba(242, 165, 26, 0.75) !important;
-  color: white !important;
+  background-color: #5a6afc !important;
+  color: black !important;
+  font-weight: bolder !important;
 }
 
 .cm-m3 {
-  color: #f2a51a !important;
+  color: #5a6afc !important;
 }
 
 .m4 {
-  background-color: #9c9c9c !important;
+  background-color: #20BA56 !important;
   color: black !important;
   padding: .25rem;
 }
 
 .th4 {
-  background-color: rgba(156, 156, 156, 0.75) !important;
-  color: white !important;
+  background-color: #20BA56 !important;
+  color: black !important;
+  font-weight: bolder !important;
 }
 
 .cm-m4 {
-  color: #9c9c9c !important;
+  color: #20BA56 !important;
 }
 
 .CodeMirror {
@@ -99,11 +104,12 @@ code {
 }
 
 #textEditor .CodeMirror {
-  height: 40vh;
+  height: 30vh;
 }
 
 #textEditor {
-  height: 40vh;
+  height: 30vh;
+  position: relative;
 }
 
 .sectionTitle {
@@ -124,5 +130,18 @@ code {
   display: block;
   margin: 1rem auto;
   height: 3rem;
+}
+
+.uploadButton {
+  border-radius: 50% !important;
+  padding: 1rem !important;
+  width: 3rem !important;
+  height: 3rem !important;
+  min-width: unset !important;
+  min-height: unset !important;
+  position: absolute !important;
+  z-index: 10000;
+  bottom: 2rem;
+  right: 2rem;
 }
 /*# sourceMappingURL=App.css.map */
