@@ -89,14 +89,13 @@ class ResultsTable extends Component {
   }
 
   handleChangePage = (_, newPage) => {
-    console.log(newPage);
     this.setState({page: newPage-1});
   }
 
   handleChangeRowsPerPage = (event) => {
     this.setState({
       rowsPerPage: event.target.value,
-      page: 0
+      page: 0,
     });
   }
 
@@ -115,6 +114,7 @@ class ResultsTable extends Component {
       <Grid container spacing={0}>
         <Grid item xs={10} style={{display: 'flex', alignItems: 'center', margin: '.25rem 0'}}>
           <Pagination
+            page={this.state.page+1}
             style={{display: 'block'}}
             count={Math.ceil(spanList.length/this.state.rowsPerPage)} 
             onChange={this.handleChangePage}
