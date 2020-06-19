@@ -10,10 +10,12 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "@tippyjs/react": "^4.0.2",
     "codemirror": "^5.54.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "react-tooltip": "^4.2.7"
   },
   "scripts": {
     "predeploy": "npm run build",

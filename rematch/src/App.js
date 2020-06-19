@@ -1,42 +1,71 @@
+import Logo from './assets/logo-dark.png';
+
 import CodeMirror from 'codemirror';
-import 'codemirror/theme/material.css';
+import 'codemirror/theme/material-darker.css';
 import 'codemirror/addon/mode/simple';
 
-import React, {Component, useState} from 'react';
+import React, { Component } from 'react';
 
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from "@material-ui/core/CssBaseline";
 import { Button } from '@material-ui/core';
-import { PlayArrow, Publish, Visibility } from '@material-ui/icons';
+import { PlayArrow, Publish } from '@material-ui/icons';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Backdrop from '@material-ui/core/Backdrop';
+import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 
 const WORKPATH = `${process.env.PUBLIC_URL}/work.js`;
 const CHUNKSIZE = 1*10**8; // 100MB
 let worker = new Worker(WORKPATH);
-let marks = [];
 
 /* CODEMIRROR MODE DEFINITION */
-CodeMirror.defineSimpleMode("rematchQuery", {
+CodeMirror.defineSimpleMode('rematchQuery', {
   start: [
-      { regex: /(\.\+|\.\*|\.|\+)/, token: "keyword" },
-      { regex: /(\\d)|(\\w)|(\\s)|(\\t)|(\\r)|(\\n)|(\\\()|(\\\))|(\\\[)|(\\\])|(\\\{)|(\\\})|(\\\.)|(\\-)|(\\_)/i, token: "string" },
-      { regex: /(![A-Za-z0-9]+\{|\})/, token: "number" },
-      { regex: /(\(|\)|\||\[|\]|-)/, token: "operator" }
+      { 
+        regex: /(![A-Za-z0-9]+\{|\})/, 
+        token: 'm0' 
+      },
+      { 
+        regex: /(\\d)|(\\w)|(\\s)|(\\t)|(\\r)|(\\n)|(\\\()|(\\\))|(\\\[)|(\\\])|(\\\{)|(\\\})|(\\\.)|(\\-)|(\\_)/i,
+        token: 'm2' 
+      },
+      { 
+        regex: /(\(|\)|\||\[|\]|-)/, 
+        token: 'm3'
+      },
+      { 
+        regex: /(\.\+|\.\*|\.|\+)/, 
+        token: 'm1' 
+      },
   ]
 });
+
 /* MATERIAL UI DARK THEME */
 const darkTheme = createMuiTheme({
   palette: {
-    type: 'dark',
-  },
+      type: 'dark',
+      primary: {
+        main: '#03DAC6',
+      },
+      background: {
+        paper: '#212121',
+        default: '#212121',
+      }
+    },
 });
+
+const SectionTitle = ({name}) => (
+  <div className="sectionTitle" style={{backgroundColor: '#03DAC6'}}>{name}</div>
+)
 
 class ResultsTable extends Component {
   constructor(props) {
@@ -70,8 +99,13 @@ class ResultsTable extends Component {
   render() {
     const {schema, spanList, textEditor} = this.props;
     return (
-      <TableContainer component={Paper} style={{marginTop: '1rem'}}>
-        <Table size="small">
+      <TableContainer>
+        <Table stickyHeader size="small" style={{ tableLayout: 'auto' }}>
+          <colgroup>
+            {schema.map((_, schIdx) => (
+              <col key={schIdx} style={{width: `${100*1/schema.length}%`}}/>
+            ))}          
+          </colgroup>
           <TableHead>
             <TableRow>
               <TablePagination
@@ -88,8 +122,10 @@ class ResultsTable extends Component {
             {(spanList.length>0)
             ? <TableRow>
                 {schema.map((name, idxHead) => (
-                  <TableCell key={idxHead}>{name}</TableCell>
-                  ))}
+                  <TableCell className={`th${idxHead}`} key={idxHead}>
+                    {name}
+                  </TableCell>
+                ))}
               </TableRow>
             : <TableRow>
                 <TableCell>
@@ -106,8 +142,9 @@ class ResultsTable extends Component {
               : spanList).map((row, idxRow) => ( 
               <TableRow key={idxRow} hover style={{cursor: 'pointer'}} onClick={() => this.handleMarkText(row)}>
                 {row.map((col, idxCol) => (
-                  <TableCell key={idxCol}>{
-                    textEditor.getRange(
+                  <TableCell
+                    key={idxCol}>
+                    {textEditor.getRange(
                       textEditor.posFromIndex(col.s),
                       textEditor.posFromIndex(col.e))}
                   </TableCell>
@@ -128,83 +165,93 @@ class App extends Component {
     this.state = {
       schema: [],
       spanList: [],
+      uploadingFile: false,
+      fileProgress: 0,
     };
   }
   componentDidMount() {
     let queryEditor = CodeMirror(document.getElementById('queryEditor'), {
-      value: '!a{This} !b{is} !c{RE}!d{match}, !e{.+}!',
+      value: '!a{RE}!b{[a-z]+} !c{[a-z]+}!d{!}',
       mode: 'rematchQuery',
-      theme: 'material',
+      theme: 'material-darker',
       lineNumbers: false,
-      scrollbarStyle: 'native',
+      scrollbarStyle: null,
       smartIndent: false,
       indentWithTabs: true,
       showInvisibles: false,
       undoDepth: 100,
       viewportMargin: 10,
+      extraKeys: {
+        'Enter': this.runWorker,
+      }
     });
     queryEditor.on('beforeChange', (instance, change) => {
-      let line = change.text.join("").replace(/\n/g, "");
-      change.update(change.from, change.to, [line]);
+      if (!["undo", "redo"].includes(change.origin)) {
+        let line = change.text.join("").replace(/\n/g, "");
+        change.update(change.from, change.to, [line]);
+      }
       return true;
     });
     let textEditor = CodeMirror(document.getElementById('textEditor'), {
       value: 
-`This is REmatch, cool!
-This is REmatch, awesome!
-This is REmatch, useful!
-This is REmatch, incredible!
-This is REmatch, fast!
+`REmatch cool!
+REmatch awesome!
+REmatch nice!
+REmatch best!
 `,
       mode: 'text/plain',
-      theme: 'material',
+      theme: 'material-darker',
       lineNumbers: true,
       scrollbarStyle: 'native',
       smartIndent: false,
       indentWithTabs: true,
       showInvisibles: true,
       undoDepth: 100,
-      viewportMargin: 10,
+      viewportMargin: 15,
     });
     this.setState({
       queryEditor, 
       textEditor,
     });
   }
+
   addMarks = (spans) => {
+    let start, end;
     spans.forEach((span, idx) => {
-      marks.push(
-        this.state.textEditor.markText(
-          this.state.textEditor.posFromIndex(span.s),
-          this.state.textEditor.posFromIndex(span.e),
-          {className: `m${idx}`})
+      start = this.state.textEditor.posFromIndex(span.s);
+      end = this.state.textEditor.posFromIndex(span.e);
+      
+      this.state.textEditor.markText(start, end, {
+          className: `m${idx}`,
+        }
       );
     });
   }
   clearMarks = () => {
-    marks.forEach((mark) => {
+    this.state.textEditor.getAllMarks().forEach((mark) => {
       mark.clear();
     });
-    marks = [];
   }
   handleFile = async (event) => {
     let file = event.target.files[0];
     if (!file) {return};
     this.state.textEditor.setValue('');
     this.clearMarks();
-    this.setState({spanList: [], schema: []});
+    this.setState({spanList: [], schema: [], uploadingFile: true, fileProgress: 0});
     let start = 0;
     let end = CHUNKSIZE;
     while (start < file.size) {
         await file.slice(start, end).text()
           // eslint-disable-next-line no-loop-func
           .then((textChunk) => {
+            this.setState({fileProgress: Math.round(100*100*start/file.size)/100})
             this.state.textEditor.replaceRange(textChunk, { line: Infinity });
             start = end;
             end += CHUNKSIZE;
           });
     }
     console.log('upload done');
+    this.setState({uploadingFile: false})
   }
   runWorker = () => {
     console.log('STARTED');
@@ -240,28 +287,60 @@ This is REmatch, fast!
   }
 
   render() {
-    //let test = this.state.spanList.map( (elem, idx) => <div key={idx}>{JSON.stringify(elem)}</div>);
     return (
       <ThemeProvider theme={darkTheme}>
-        <Button variant="outlined" startIcon={<PlayArrow/>} onClick={this.runWorker} >
-            Run Query
-        </Button>
-        <input accept="text/*" id="fileInput" type="file" style={{display: 'none'}} onChange={this.handleFile}/>
-        <label htmlFor="fileInput">
-          <Button variant="outlined" component="span" startIcon={<Publish/>}>
-            Upload file
-          </Button>
-        </label>
-        <div id="queryEditor"></div>
-        <div id="textEditor"></div>
-        <ResultsTable 
-          spanList={this.state.spanList} 
-          schema={this.state.schema} 
-          textEditor={this.state.textEditor} 
-          addMarks={this.addMarks}
-          clearMarks={this.clearMarks}
-        />
-        <div id="test"></div>
+        <CssBaseline />
+        <Container>
+          <img className="logo" src={Logo} alt="REmatch"/>
+          <Paper elevation={3}>
+            <Backdrop open={this.state.uploadingFile} style={{zIndex: 10000, display: 'flex', flexDirection: 'column'}}>
+              <CircularProgress size='3rem'/>
+              <h2 style={{color: '#fff'}}>Loading ({this.state.fileProgress}%)</h2>
+            </Backdrop>
+            <Grid container spacing={0}>
+              <Grid item xs={12}>
+                <input accept="*" id="fileInput" type="file" style={{display: 'none'}} onChange={this.handleFile}/>
+                <label htmlFor="fileInput">
+                  <Button variant="outlined" component="span" startIcon={<Publish/>}>
+                    Upload file
+                  </Button>
+                </label>
+              </Grid>
+              {/* Expression */}
+              <Grid item xs={12}>
+                <SectionTitle name="Expression"/>
+              </Grid>
+              <Grid item xs={11}>
+                <div id="queryEditor"></div>
+              </Grid>
+              <Grid item xs={1}>
+                <Button color="primary" startIcon={<PlayArrow/>} onClick={this.runWorker} style={{width: '100%', background: 'none !important'}}>
+                    Run
+                </Button>
+              </Grid>
+              {/* EDITOR */}
+              <Grid item xs={12}>
+                <SectionTitle name="Text"/>
+              </Grid>
+              <Grid item xs={12}>
+                <div id="textEditor"></div>
+              </Grid>
+              {/* RESULTS */}
+              <Grid item xs={12}>
+                <SectionTitle name="Matches"/>
+              </Grid>
+              <Grid item xs={12}>
+                <ResultsTable 
+                  spanList={this.state.spanList} 
+                  schema={this.state.schema} 
+                  textEditor={this.state.textEditor} 
+                  addMarks={this.addMarks}
+                  clearMarks={this.clearMarks}
+                />
+              </Grid>
+            </Grid>
+          </Paper>
+        </Container>
       </ThemeProvider>
     )
   }
