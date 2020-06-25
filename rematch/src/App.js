@@ -5,6 +5,12 @@
  * color scheme
  * hover
  * background color differed
+ * bug pagination
+ * cortar match con (...)
+ * botón con más informacion (span, linea, char)
+ * alertas material
+ * Early outputs
+ * download results
  */
 import Logo from './assets/logo-dark.png';
 
