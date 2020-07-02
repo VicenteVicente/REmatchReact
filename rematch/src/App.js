@@ -97,7 +97,11 @@ class ResultsTable extends Component {
   }
   
   handleDownload = () => {
-    let blob = new Blob([JSON.stringify(this.props.spanList)], {type: 'application/json'});
+    let blob = new Blob([
+    JSON.stringify({
+      variables: this.props.schema,
+      matches: this.props.spanList
+    })], {type: 'application/json'});
     let elem = window.document.createElement('a');
     elem.href = window.URL.createObjectURL(blob);
     elem.download = 'test.json';        
@@ -130,7 +134,7 @@ class ResultsTable extends Component {
     const { schema, spanList, textEditor } = this.props;
     return ([
       <Grid container spacing={0}>
-        <Grid item xs={5} style={{ display: 'flex', alignItems: 'center', margin: '.25rem 0' }}>
+        <Grid item xs={7} style={{ display: 'flex', margin: '.25rem 0'}}>
           <Pagination
             page={this.state.page + 1}
             style={{ display: 'block' }}
@@ -139,7 +143,7 @@ class ResultsTable extends Component {
             showFirstButton
             showLastButton />
         </Grid>
-        <Grid item xs={7} justify="flex-end" style={{ display: 'flex'}}>
+        <Grid item xs={5} justify="flex-end" style={{ display: 'flex', margin: '.25rem 0'}}>
           <Select
             value={this.state.rowsPerPage}
             labelId="demo-simple-select-label"
@@ -191,6 +195,8 @@ class ResultsTable extends Component {
                     return (
                       <TableCell key={idxCol} style={{ padding: 0 }}>
                         <Tippy
+                          arrow={true}
+                          theme="light"
                           position="top"
                           popperOptions={{modifiers: {
                             preventOverflow: {
