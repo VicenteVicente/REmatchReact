@@ -89,6 +89,54 @@ code {
   color: #20BA56 !important;
 }
 
+.m5 {
+  background-color: #eb34ff !important;
+  color: black !important;
+  padding: .25rem;
+}
+
+.th5 {
+  background-color: #eb34ff !important;
+  color: black !important;
+  font-weight: bolder !important;
+}
+
+.cm-m5 {
+  color: #eb34ff !important;
+}
+
+.m6 {
+  background-color: #a6ff22 !important;
+  color: black !important;
+  padding: .25rem;
+}
+
+.th6 {
+  background-color: #a6ff22 !important;
+  color: black !important;
+  font-weight: bolder !important;
+}
+
+.cm-m6 {
+  color: #a6ff22 !important;
+}
+
+.m7 {
+  background-color: #7f34f0 !important;
+  color: black !important;
+  padding: .25rem;
+}
+
+.th7 {
+  background-color: #7f34f0 !important;
+  color: black !important;
+  font-weight: bolder !important;
+}
+
+.cm-m7 {
+  color: #7f34f0 !important;
+}
+
 .CodeMirror {
   font-size: 22px;
 }

@@ -18,10 +18,14 @@ $colors:
 #FCE938,
 hsl(354, 62%, 58%),
 hsl(234, 96%, 67%),
-#20BA56;
+#20BA56,
+
+#eb34ff,
+#a6ff22,
+#7f34f0;
 
 
-@for $i from 0 to 5 {
+@for $i from 0 to 8 {
   .m#{$i} {
     background-color: nth($colors, $i+1) !important;
     color: black !important;
