@@ -26,7 +26,7 @@ import { Tooltip as Tippy } from 'react-tippy';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Button from '@material-ui/core/Button';
-import { PlayArrow, Publish } from '@material-ui/icons';
+import { PlayArrow, Publish, GetApp } from '@material-ui/icons';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -95,6 +95,16 @@ class ResultsTable extends Component {
       rowsPerPage: 25,
     }
   }
+  
+  handleDownload = () => {
+    let blob = new Blob([JSON.stringify(this.props.spanList)], {type: 'application/json'});
+    let elem = window.document.createElement('a');
+    elem.href = window.URL.createObjectURL(blob);
+    elem.download = 'test.json';        
+    document.body.appendChild(elem);
+    elem.click();        
+    document.body.removeChild(elem);
+  }
 
   handleChangePage = (_, newPage) => {
     this.setState({ page: newPage - 1 });
@@ -120,7 +130,7 @@ class ResultsTable extends Component {
     const { schema, spanList, textEditor } = this.props;
     return ([
       <Grid container spacing={0}>
-        <Grid item xs={10} style={{ display: 'flex', alignItems: 'center', margin: '.25rem 0' }}>
+        <Grid item xs={5} style={{ display: 'flex', alignItems: 'center', margin: '.25rem 0' }}>
           <Pagination
             page={this.state.page + 1}
             style={{ display: 'block' }}
@@ -129,9 +139,8 @@ class ResultsTable extends Component {
             showFirstButton
             showLastButton />
         </Grid>
-        <Grid item xs={2} style={{ display: 'flex', alignItems: 'center' }}>
+        <Grid item xs={7} justify="flex-end" style={{ display: 'flex'}}>
           <Select
-            style={{ width: '100%' }}
             value={this.state.rowsPerPage}
             labelId="demo-simple-select-label"
             onChange={this.handleChangeRowsPerPage}>
@@ -140,6 +149,11 @@ class ResultsTable extends Component {
             <MenuItem value={50}>50 rows per page</MenuItem>
             <MenuItem value={100}>100 rows per page</MenuItem>
           </Select>
+          <Tooltip title="Download matches">
+            <Button color="primary" startIcon={<GetApp/>} onClick={this.handleDownload}>
+              Matches
+            </Button>
+          </Tooltip>
         </Grid>
       </Grid>,
       <TableContainer style={{ height: '40vh', oveflow: 'auto' }}>
@@ -367,9 +381,9 @@ REmatch best!
                 <div id="queryEditor"></div>
               </Grid>
               <Grid item xs={1}>
-                <Button color="primary" startIcon={<PlayArrow />} onClick={this.runWorker} style={{ width: '100%', background: 'none !important' }}>
+                <Button color="primary" justify="flex-end" startIcon={<PlayArrow />} onClick={this.runWorker} style={{ display: 'flex', width: '100%', background: 'none !important' }}>
                   Run
-                  </Button>
+                </Button>
               </Grid>
               {/* EDITOR */}
               <Grid item xs={12}>
