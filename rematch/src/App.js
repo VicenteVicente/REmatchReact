@@ -20,9 +20,6 @@ import CodeMirror from 'codemirror';
 import 'codemirror/theme/material-darker.css';
 import 'codemirror/addon/mode/simple';
 
-import 'react-tippy/dist/tippy.css';
-import { Tooltip as Tippy } from 'react-tippy';
-
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Button from '@material-ui/core/Button';
@@ -42,6 +39,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Pagination from '@material-ui/lab/Pagination';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 
 const WORKPATH = `${process.env.PUBLIC_URL}/work.js`;
 const CHUNKSIZE = 1 * 10 ** 8; // 100MB
@@ -78,13 +77,21 @@ const darkTheme = createMuiTheme({
     },
     background: {
       paper: '#212121',
-      default: '#2c2c2c',
+      default: '#353535',
     }
   },
 });
 
 const SectionTitle = ({ title }) => (
-  <div className="sectionTitle" style={{ backgroundColor: '#03DAC6' }}>{title}</div>
+  <Typography variant="body1" component="div" style={{
+    color: '#000000',
+    backgroundColor: '#03DAC6',
+    padding: '.5rem 0 .5rem .75rem',
+  }}>
+    <Box fontWeight="fontWeightBold">
+      {title}
+    </Box>
+  </Typography>
 )
 
 class ResultsTable extends Component {
@@ -95,18 +102,18 @@ class ResultsTable extends Component {
       rowsPerPage: 25,
     }
   }
-  
+
   handleDownload = () => {
     let blob = new Blob([
-    JSON.stringify({
-      variables: this.props.schema,
-      matches: this.props.spanList
-    })], {type: 'application/json'});
+      JSON.stringify({
+        variables: this.props.schema,
+        matches: this.props.spanList
+      })], { type: 'application/json' });
     let elem = window.document.createElement('a');
     elem.href = window.URL.createObjectURL(blob);
-    elem.download = 'test.json';        
+    elem.download = 'test.json';
     document.body.appendChild(elem);
-    elem.click();        
+    elem.click();
     document.body.removeChild(elem);
   }
 
@@ -126,15 +133,19 @@ class ResultsTable extends Component {
     this.props.addMarks(row);
   }
 
-  UNSAFE_componentWillReceiveProps(_) {
-    this.setState({ page: 0 });
+  componentDidUpdate(prevProps) {
+    if (prevProps.spanList.length !== 0 && this.props.spanList.length === 0) {
+      this.setState({
+        page: 0,
+      })
+    }
   }
 
   render() {
     const { schema, spanList, textEditor } = this.props;
     return ([
       <Grid container spacing={0}>
-        <Grid item xs={7} style={{ display: 'flex', margin: '.25rem 0'}}>
+        <Grid item xs={7} style={{ margin: '.25rem 0' }}>
           <Pagination
             page={this.state.page + 1}
             style={{ display: 'block' }}
@@ -143,7 +154,7 @@ class ResultsTable extends Component {
             showFirstButton
             showLastButton />
         </Grid>
-        <Grid item xs={5} justify="flex-end" style={{ display: 'flex', margin: '.25rem 0'}}>
+        <Grid item xs={5} style={{ margin: '.25rem 0', display: 'flex', justifyContent: 'flex-end', gap: '.5rem' }}>
           <Select
             value={this.state.rowsPerPage}
             labelId="demo-simple-select-label"
@@ -154,7 +165,7 @@ class ResultsTable extends Component {
             <MenuItem value={100}>100 rows per page</MenuItem>
           </Select>
           <Tooltip title="Download matches">
-            <Button color="primary" startIcon={<GetApp/>} onClick={this.handleDownload}>
+            <Button color="primary" startIcon={<GetApp />} onClick={this.handleDownload}>
               Matches
             </Button>
           </Tooltip>
@@ -176,8 +187,9 @@ class ResultsTable extends Component {
                   </TableCell>
                 ))}
               </TableRow>
-              : <TableRow>
-                <TableCell>
+              :
+              <TableRow>
+                <TableCell style={{backgroundColor: 'transparent'}}>
                   No matches
                 </TableCell>
               </TableRow>
@@ -194,38 +206,11 @@ class ResultsTable extends Component {
                     let match = textEditor.getRange(textEditor.posFromIndex(col.s), textEditor.posFromIndex(col.e));
                     return (
                       <TableCell key={idxCol} style={{ padding: 0 }}>
-                        <Tippy
-                          arrow={true}
-                          theme="light"
-                          position="top"
-                          popperOptions={{modifiers: {
-                            preventOverflow: {
-                              enabled: false
-                            }}
-                          }}
-                          animateFill={false}
-                          followCursor={true}
-                          duration={0}
-                          html={
-                            <div style={{ maxWidth: 300 }}>
-                              <p>
-                                <strong>Range:</strong> 
-                                <br />
-                                [{col.s}, {col.e})
-                              </p>
-                              <p>
-                                <strong>Full Match:</strong>
-                                <br />
-                                {match}
-                              </p>
-                            </div>
-                          }>
-                          <div style={{ padding: '6px 24px 6px 16px' }}>
-                            {(match.length > 36)
-                              ? match.slice(0, 36) + '...'
-                              : match}
-                          </div>
-                        </Tippy>
+                        <div style={{ padding: '6px 24px 6px 16px' }}>
+                          {(match.length > 36)
+                            ? match.slice(0, 36) + '...'
+                            : match}
+                        </div>
                       </TableCell>)
                   }
                   )}
@@ -233,7 +218,7 @@ class ResultsTable extends Component {
               ))}
           </TableBody>
         </Table>
-      </TableContainer>]
+      </TableContainer >]
     )
   }
 }
@@ -373,7 +358,7 @@ REmatch best!
         <CssBaseline />
         <Container className="container">
           <img className="logo" src={Logo} alt="REmatch" />
-          <Paper elevation={3}>
+          <Paper elevation={5} style={{ overflow: 'hidden' }}>
             <Backdrop open={this.state.uploadingFile} style={{ zIndex: 10000, display: 'flex', flexDirection: 'column' }}>
               <CircularProgress size='3rem' />
               <h2 style={{ color: '#fff' }}>Loading ({this.state.fileProgress}%)</h2>

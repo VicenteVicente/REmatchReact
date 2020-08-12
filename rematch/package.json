@@ -15,7 +15,6 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
-    "react-tippy": "^1.4.0",
     "react-tooltip": "^4.2.7"
   },
   "scripts": {

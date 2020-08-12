@@ -160,12 +160,6 @@ code {
   position: relative;
 }
 
-.sectionTitle {
-  color: black;
-  padding: .5rem .75rem;
-  font-weight: bold;
-}
-
 .bottomContainer {
   height: 50vh;
 }
