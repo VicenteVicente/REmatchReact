@@ -45,13 +45,16 @@ hsl(234, 96%, 67%),
   font-size: 22px;
   #queryEditor & {
     overflow: hidden !important;
-    height: 2.25rem;
+    height: auto;
+    padding: .5rem;
     pre::after, pre::before {
       content: ".*";
       color: #888888;
     }
   }
+
   #textEditor & {
+    padding: .5rem 0;
     height: 30vh;
   }
 }
@@ -82,7 +85,7 @@ hsl(234, 96%, 67%),
   min-width: unset !important;
   min-height: unset !important;
   position: absolute !important;
-  z-index: 10000;
+  z-index: 5000;
   bottom: 2rem;
   right: 2rem;
 }
