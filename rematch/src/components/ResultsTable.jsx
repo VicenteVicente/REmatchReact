@@ -21,11 +21,7 @@ const ResultsTable = ({
   const [state, setState] = useState({
     page: 0,
     rowsPerPage: 25,
-  })
-
-  const handleDownload = () => {
-    alert('TODO');
-  }
+  });
 
   const handleChangePage = (_, newPage) => {
     setState((prevState) => ({ ...prevState, page: newPage - 1 }));
@@ -42,7 +38,6 @@ const ResultsTable = ({
 
   useEffect(() => {
     if (spanList.length === 0) {
-      console.log('Estado seteado');
       setState((prevState) => ({ ...prevState, page: 0 }));
     }
   }, [spanList]);
