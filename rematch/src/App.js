@@ -26,7 +26,7 @@ import 'codemirror/addon/mode/simple';
 import Logo from './assets/logo-dark.png';
 
 const WORKPATH = `${process.env.PUBLIC_URL}/work.js`;
-const CHUNKSIZE = 1 * 10 ** 8; // 100MB
+const CHUNK_SIZE = 1 * 10 ** 8; // 100MB
 let worker = new Worker(WORKPATH);
 
 /* CODEMIRROR MODE DEFINITION */
@@ -71,7 +71,7 @@ class App extends Component {
     super(props);
     this.state = {
       schema: [],
-      spanList: [],
+      matches: [],
       uploadingFile: false,
       fileProgress: 0,
     };
@@ -120,8 +120,8 @@ class App extends Component {
   addMarks = (spans) => {
     let start, end;
     spans.forEach((span, idx) => {
-      start = this.state.textEditor.posFromIndex(span.s);
-      end = this.state.textEditor.posFromIndex(span.e);
+      start = this.state.textEditor.posFromIndex(span[0]);
+      end = this.state.textEditor.posFromIndex(span[1]);
 
       this.state.textEditor.markText(start, end, {
         className: `m${idx}`,
@@ -142,9 +142,9 @@ class App extends Component {
     if (!file) { return };
     this.state.textEditor.setValue('');
     this.clearMarks();
-    this.setState({ spanList: [], schema: [], uploadingFile: true, fileProgress: 0 });
+    this.setState({ matches: [], schema: [], uploadingFile: true, fileProgress: 0 });
     let start = 0;
-    let end = CHUNKSIZE;
+    let end = CHUNK_SIZE;
     while (start < file.size) {
       await file.slice(start, end).text()
         // eslint-disable-next-line no-loop-func
@@ -152,7 +152,7 @@ class App extends Component {
           this.setState({ fileProgress: Math.round(100 * 100 * start / file.size) / 100 })
           this.state.textEditor.replaceRange(textChunk, { line: Infinity });
           start = end;
-          end += CHUNKSIZE;
+          end += CHUNK_SIZE;
         });
     }
     console.log('upload done');
@@ -162,7 +162,7 @@ class App extends Component {
   runWorker = () => {
     console.log('STARTED');
     this.clearMarks();
-    this.setState({ spanList: [], schema: [] });
+    this.setState({ matches: [], schema: [] });
     worker.postMessage({
       text: this.state.textEditor.getValue(),
       query: this.state.queryEditor.getValue(),
@@ -170,21 +170,16 @@ class App extends Component {
     worker.onmessage = (m) => {
       switch (m.data.type) {
         case 'SCHEMA':
-          this.setState({ schema: m.data.schema });
+          this.setState({ schema: m.data.payload });
           break;
-        case 'SPANS':
-          this.setState((prevState, _) => ({ spanList: [...prevState.spanList, ...m.data.spans] }));
-          break;
-        case 'LAST_SPANS':
-          this.setState((prevState, _) => ({ spanList: [...prevState.spanList, ...m.data.spans] }));
-          console.log("FINISHED (NO MORE SPANS)");
+        case 'MATCHES':
+          this.setState((prevState) => ({ matches: [...prevState.matches, ...m.data.payload] }));
           break;
         case 'ERROR':
-          console.log("FINISHED (ERROR)");
-          console.log(m.data.error);
-          break;
-        case 'NO_MATCHES':
-          console.log("FINISHED (NO MATCHES)");
+          console.log('ERROR:', m.data.payload);
+          worker.terminate();
+          worker = new Worker(WORKPATH);
+          console.log('WORKER HAS BEEN RELOADED');
           break;
         default:
           break;
@@ -259,7 +254,7 @@ class App extends Component {
 
               <Grid item xs={12}>
                 <ResultsTable
-                  spanList={this.state.spanList}
+                  matches={this.state.matches}
                   schema={this.state.schema}
                   textEditor={this.state.textEditor}
                   addMarks={this.addMarks}

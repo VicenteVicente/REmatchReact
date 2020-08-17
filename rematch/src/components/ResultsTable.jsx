@@ -12,7 +12,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Pagination from '@material-ui/lab/Pagination';
 
 const ResultsTable = ({
-  spanList,
+  matches,
   schema,
   textEditor,
   addMarks,
@@ -37,10 +37,10 @@ const ResultsTable = ({
   }
 
   useEffect(() => {
-    if (spanList.length === 0) {
+    if (matches.length === 0) {
       setState((prevState) => ({ ...prevState, page: 0 }));
     }
-  }, [spanList]);
+  }, [matches]);
 
   return (
     <>
@@ -49,7 +49,7 @@ const ResultsTable = ({
           <Pagination
             page={state.page + 1}
             style={{ display: 'block' }}
-            count={Math.ceil(spanList.length / state.rowsPerPage)}
+            count={Math.ceil(matches.length / state.rowsPerPage)}
             onChange={handleChangePage}
           />
         </Grid>
@@ -74,7 +74,7 @@ const ResultsTable = ({
             ))}
           </colgroup>
           <TableHead>
-            {(spanList.length > 0)
+            {(matches.length > 0)
               ? <TableRow>
                 {schema.map((name, idxHead) => (
                   <TableCell className={`th${idxHead}`} key={idxHead}>
@@ -92,13 +92,13 @@ const ResultsTable = ({
           </TableHead>
           <TableBody>
             {(state.rowsPerPage > 0
-              ? spanList.slice(
+              ? matches.slice(
                 state.page * state.rowsPerPage,
                 state.page * state.rowsPerPage + state.rowsPerPage)
-              : spanList).map((row, idxRow) => (
+              : matches).map((row, idxRow) => (
                 <TableRow key={idxRow} hover style={{ cursor: 'pointer' }} onClick={() => handleMarkText(row)}>
                   {row.map((col, idxCol) => {
-                    let match = textEditor.getRange(textEditor.posFromIndex(col.s), textEditor.posFromIndex(col.e));
+                    let match = textEditor.getRange(textEditor.posFromIndex(col[0]), textEditor.posFromIndex(col[1]));
                     return (
                       <TableCell key={idxCol} style={{ padding: 0 }}>
                         <div style={{ padding: '6px 24px 6px 16px' }}>
