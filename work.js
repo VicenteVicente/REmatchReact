@@ -1,57 +1,66 @@
-importScripts('./spanners_interface.js');
-let i;
-let currResult;
-let currSpan;
-const MESSAGESIZE = 10000;
+// eslint-disable-next-line no-undef
+importScripts('./rematch_wasm.js');
 
-Module['onRuntimeInitialized'] = () => {
-    onmessage = (m) => {
-        let schema = [];
-        let arr = [];
-        let tempArr = [];
-        let counter = 0;
-        try {
-            let instance = new Module.WasmInterface(m.data.text, `.*${m.data.query}.*`);
-            instance.init();
-            /* SCHEMA */
-            let tempSchema = instance.getOutputSchema();
-            for (i = 0; i < tempSchema.size(); i++) {
-                schema.push(tempSchema.get(i));
-            }
-            postMessage({
-                type: 'SCHEMA',
-                schema: schema,
+// eslint-disable-next-line no-undef
+const { RegEx, RegExOptions } = Module;
+const MESSAGE_SIZE = 20000;
+
+this.onmessage = (m) => {
+    try {
+        let i = 0;
+        let count = 0;
+        let currMatch = [];
+        let matches = [];
+
+        let match;
+        let rgxOptions = new RegExOptions();
+        rgxOptions.early_output = true;
+        let rgx = new RegEx(`.*${m.data.query}.*`, rgxOptions);
+
+        /* THIS SHOULD BE IN RegEx OBJECT */
+        let schema = [...m.data.query.matchAll(/!([A-Za-z0-9])/g)].map((m) => (m[1]));
+        this.postMessage({
+            type: 'SCHEMA',
+            payload: schema,
+        })
+        /* THIS SHOULD BE IN RegEx OBJECT */
+
+        while ((match = rgx.findIter(m.data.text))) {
+
+            schema.forEach((variable) => {
+                currMatch.push(match.span(variable));
             });
-            /* RESULTS */
-            if (!instance.hasNext()) {
-                postMessage({
-                    type: 'NO_MATCHES',
-                });
+            
+            matches.push(currMatch);
+            currMatch = [];
+            count++;
+
+            if (matches.length === MESSAGE_SIZE) {
+                console.log('SEND CHUNK');
+                this.postMessage({
+                    type: 'MATCHES',
+                    payload: matches,
+                })
+                matches = [];
+                count = 0;
             }
-            while (instance.hasNext()) {
-                currResult = instance.next();
-                tempArr = [];
-                for (i = 0; i < schema.length; i++) {
-                    currSpan = currResult.get(i);
-                    tempArr.push({s: currSpan[0], e: currSpan[1]});
-                }
-                arr.push(tempArr);
-                counter++;
-                if (counter === MESSAGESIZE || !instance.hasNext()) {
-                    postMessage({
-                        type: (instance.hasNext()) ? 'SPANS' : 'LAST_SPANS',
-                        spans: arr,
-                    });
-                    arr = [];
-                    counter = 0;
-                }
-            }
-            // instance.delete();
-        } catch(err) {
-            postMessage({
-                type: 'ERROR',
-                error: `${err} Reloading worker...`,
+        }
+
+        if (matches.length > 0) {
+            console.log('SEND LAST CHUNK');
+            this.postMessage({
+                type: 'MATCHES',
+                payload: matches,
             });
         }
+
+        rgxOptions.delete();
+        rgx.delete();
+
+    } catch (err) {
+        this.postMessage({
+            type: 'ERROR',
+            payload: err,
+        });
     }
 }
